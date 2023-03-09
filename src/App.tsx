@@ -1,4 +1,4 @@
-import React, {useState, ChangeEvent, useEffect} from "react"
+import React, {useState, ChangeEvent, useEffect, useRef, MutableRefObject} from "react"
 
 function App() {
 
@@ -8,6 +8,8 @@ function App() {
   const [timer, setTimer] = useState(DEFAULT_TIMER_VALUE)
   const [isTimeRunning, setIsTimeRunning] = useState(false)
   const [wordCounts, setWordCounts] = useState(0)
+
+  const textBoxRef = useRef() as MutableRefObject<HTMLTextAreaElement>
 
   function handleChange(event: ChangeEvent<HTMLTextAreaElement>) {
     const {value} = event.target
@@ -25,6 +27,8 @@ function App() {
     setIsTimeRunning(true)
     setText("")
     setWordCounts(0)
+    textBoxRef.current.disabled = false
+    textBoxRef.current.focus()
   }
 
   function endGame() {
@@ -48,6 +52,7 @@ function App() {
         onChange={handleChange}
         value={text}
         disabled={!isTimeRunning}
+        ref={textBoxRef}
       />
       <h4>Remaining time : {timer}</h4>
       <button onClick={handleClickStartButton} disabled={isTimeRunning}>{isTimeRunning ? "Let's type !" : "Start"}</button>
