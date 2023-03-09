@@ -2,8 +2,11 @@ import React, {useState, ChangeEvent, useEffect} from "react"
 
 function App() {
 
+  const DEFAULT_TIMER_VALUE = 10
+
   const [text, setText] = useState("")
-  const [timer, setTimer] = useState(10)
+  const [timer, setTimer] = useState(DEFAULT_TIMER_VALUE)
+  const [isTimeRunning, setIsTimeRunning] = useState(false)
 
   function handleChange(event: ChangeEvent<HTMLTextAreaElement>) {
     const {value} = event.target
@@ -17,10 +20,18 @@ function App() {
   }
   
   useEffect(() => {
-    if(timer > 0) {
+    if(timer > 0 && isTimeRunning) {
       setTimeout(() => {setTimer(prevTimer => prevTimer-1)}, 1000)
     }
-  }, [timer])
+    else if(timer === 0) {
+      setIsTimeRunning(false)
+    }
+  }, [timer, isTimeRunning])
+
+  function handleClickStartButton(){
+    setTimer(DEFAULT_TIMER_VALUE)
+    setIsTimeRunning(true)
+  }
 
   return (
     <div className="App">
@@ -30,7 +41,7 @@ function App() {
         value={text}
       />
       <h4>Remaining time : {timer}</h4>
-      <button onClick={() => console.log(computeCountWords(text))}>Start</button>
+      <button onClick={handleClickStartButton}>Start</button>
       <h1>Word Count : XX</h1>
     </div>
   )
